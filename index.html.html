@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تحدي ختام المستوى الأول في الروبوتكس 🤖🚀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo & Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        botNavy: '#0F172A',
+                        botCard: '#1E293B',
+                        botCyan: '#06B6D4',
+                        botPurple: '#8B5CF6',
+                        botAmber: '#F59E0B',
+                        botEmerald: '#10B981',
+                        botRose: '#F43F5E'
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card-interactive {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card-interactive:active {
+            transform: scale(0.98);
+        }
+
+        .selected-card {
+            border-color: #06B6D4 !important;
+            background: rgba(6, 182, 212, 0.18) !important;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+        }
+
+        /* Confetti Canvas overlay */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(6, 182, 212, 0.4); }
+            50% { border-color: rgba(6, 182, 212, 1); }
+        }
+        .pulse-box {
+            animation: pulse-border 2s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between p-3 md:p-6 text-right font-cairo">
+
+    <header id="app-header" class="w-full max-w-md mx-auto hidden mb-3">
+        <div class="glass-card p-3 rounded-2xl flex items-center justify-between shadow-lg border border-slate-700/50">
+            <div class="flex items-center gap-2.5">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xl border border-cyan-500/30 shadow-inner">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <h1 class="text-xs font-bold text-slate-300">تحدي ختام المستوى الأول</h1>
+                    <span id="current-station-title" class="text-xs font-black text-cyan-400">المحطة 1: الأساسيات</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTeacherDashboard()" title="معلومات المعلم" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 flex items-center justify-center text-xs font-bold transition active:scale-95">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+                <div class="text-left">
+                    <span class="text-[10px] text-slate-400 font-bold block">التقدم</span>
+                    <span id="progress-text" class="text-xs font-black text-amber-400">1 / 10</span>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 relative">
+                    <svg class="w-8 h-8 transform -rotate-90">
+                        <circle cx="16" cy="16" r="13" stroke="#334155" stroke-width="3" fill="none"/>
+                        <circle id="progress-circle" cx="16" cy="16" r="13" stroke="#06B6D4" stroke-width="3" stroke-dasharray="81.68" stroke-dashoffset="81.68" fill="none" class="transition-all duration-500"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Canvas overlay for celebration confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <main class="w-full max-w-md mx-auto my-auto flex-grow flex flex-col justify-center">
+
+        <section id="step-0" class="space-y-5 py-4">
+            <div class="text-center space-y-3">
+                <div class="inline-flex p-4 rounded-3xl bg-gradient-to-tr from-cyan-500/20 via-purple-500/20 to-emerald-500/20 border border-cyan-500/30 text-cyan-400 text-6xl animate-bounce shadow-2xl">
+                    🤖
+                </div>
+                <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-400">
+                    تحدي ختام المستوى الأول
+                </h1>
+                <p class="text-slate-300 text-xs md:text-sm font-semibold leading-relaxed px-2">
+                    أهلاً بك يا بطل الروبوتكس المبدع! 🚀<br>
+                    حان وقت التحدي الشيق... لنرى كيف ستستخدم مهاراتك الهندسية والبرمجية الرائعة اليوم!
+                </p>
+            </div>
+
+            <div class="glass-card p-5 rounded-3xl space-y-4 shadow-xl border border-slate-700/80">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user text-cyan-400"></i> اسم الطالب الثلاثي
+                    </label>
+                    <input type="text" id="student-name" placeholder="أدخل اسمك الثلاثي (مثال: أحمد محمد علي)"
+                        class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-phone text-emerald-400"></i> رقم جوال ولي الأمر (10 أرقام)
+                    </label>
+                    <input type="tel" id="parent-phone" placeholder="05xxxxxxxx" dir="ltr" maxlength="10"
+                        class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white text-right placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition">
+                </div>
+
+                <div id="welcome-error" class="hidden text-xs text-rose-400 font-bold text-center bg-rose-500/10 p-3 rounded-xl border border-rose-500/30 space-y-1">
+                    <div id="welcome-error-text">يرجى إدخال البيانات بشكل صحيح للبدء!</div>
+                </div>
+            </div>
+
+            <button onclick="startAssessment()"
+                class="w-full py-4 bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-cyan-500/25 transition transform active:scale-95 flex items-center justify-center gap-2">
+                <span>🚀 ابدأ التحدي الآن</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </section>
+
+        <section id="step-1" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-cyan-400 space-y-1">
+                <span class="text-xs text-cyan-400 font-bold block">المحطة 1 🤖 • النشاط 1</span>
+                <h2 class="text-lg font-bold text-white">هل هو روبوت؟ 🔍</h2>
+                <p class="text-slate-300 text-xs">اختر بطاقة الجهاز الذي يُمثّل **روبوتًا ذكيًا** من بين الصور التالية:</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3" id="act1-grid">
+                <!-- Dynamic cards populated via JS -->
+            </div>
+
+            <div id="act1-reason-box" class="hidden glass-card p-4 rounded-2xl space-y-3 border border-slate-700">
+                <span class="text-xs text-amber-300 font-bold block">🧠 لماذا اخترت هذا الجهاز كروبوت؟</span>
+                <div class="space-y-2" id="act1-reasons">
+                    <!-- Reasons populated via JS -->
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button id="act1-next-btn" onclick="nextQuestion(1)" disabled
+                    class="flex-1 py-3.5 bg-slate-800 text-slate-500 font-bold text-base rounded-xl transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <span>تأكيد الإجابة والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-2" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-cyan-400 space-y-1">
+                <span class="text-xs text-cyan-400 font-bold block">المحطة 1 🤖 • النشاط 2</span>
+                <h2 class="text-lg font-bold text-white">ابنِ روبوتك المتحرك 🧩</h2>
+                <p class="text-slate-300 text-xs">اضغط لتحديد **المكونات الأساسية** التي يحتاجها الروبوت لكي **يتحرك**:</p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2.5" id="act2-parts">
+                <!-- Interactive robot parts populated via JS -->
+            </div>
+
+            <div id="act2-motor-question" class="hidden glass-card p-4 rounded-2xl space-y-3 border border-slate-700">
+                <span class="text-xs text-cyan-300 font-bold block">⚙️ ما هي الوظيفة الأساسية لـ (المحرك Motor)؟</span>
+                <div class="space-y-2" id="act2-motor-opts">
+                    <!-- Motor function choices populated via JS -->
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(2)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act2-next-btn" onclick="nextQuestion(2)" disabled
+                    class="flex-1 py-3.5 bg-slate-800 text-slate-500 font-bold text-base rounded-xl transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <span>تأكيد الاختيار والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-3" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-purple-400 space-y-1">
+                <span class="text-xs text-purple-400 font-bold block">المحطة 2 ⚙️ • النشاط 3</span>
+                <h2 class="text-lg font-bold text-white">رتب خطوات التركيب 🛠️</h2>
+                <p class="text-slate-300 text-xs">استخدم الأسهم لترتيب الخطوات بالتسلسل الهندسي الصحيح لبناء الروبوت:</p>
+            </div>
+
+            <div class="space-y-2" id="act3-steps-container">
+                <!-- Reorderable step blocks injected via JS -->
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(3)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act3-next-btn" onclick="nextQuestion(3)"
+                    class="flex-1 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                    <span>اعتمد الترتيب والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-4" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-purple-400 space-y-1">
+                <span class="text-xs text-purple-400 font-bold block">المحطة 2 ⚙️ • النشاط 4</span>
+                <h2 class="text-lg font-bold text-white">أين المشكلة؟ 🔎</h2>
+                <p class="text-slate-300 text-xs">لاحظ الروبوت التالي في المختبر... هناك خطأ في التركيب يمنعه من الحركة بشكل سليم!</p>
+            </div>
+
+            <!-- Visual Error Card with graphic details -->
+            <div class="glass-card p-4 rounded-2xl border border-slate-700 text-center space-y-3">
+                <div class="relative w-full h-40 bg-slate-900/90 rounded-xl overflow-hidden flex items-center justify-center border border-slate-800 pulse-box">
+                    <div class="text-center space-y-2">
+                        <div class="text-6xl animate-pulse">🤖🔌</div>
+                        <span class="text-xs text-rose-400 font-bold block bg-rose-500/10 py-1.5 px-3 rounded-full border border-rose-500/30">
+                            ⚠️ سلك المحرك الأيمن مفصول عن وحدة التحكم!
+                        </span>
+                    </div>
+                </div>
+
+                <div class="text-right space-y-2">
+                    <label class="text-xs text-purple-300 font-bold block">ماذا تتوقع أن يحدث للروبوت عند تشغيل البرنامج؟</label>
+                    <div class="space-y-2" id="act4-options">
+                        <!-- Choices injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(4)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act4-next-btn" onclick="nextQuestion(4)" disabled
+                    class="flex-1 py-3.5 bg-slate-800 text-slate-500 font-bold text-base rounded-xl transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <span>تأكيد التشخيص والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-5" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-amber-400 space-y-1">
+                <span class="text-xs text-amber-400 font-bold block">المحطة 3 💻 • النشاط 5</span>
+                <h2 class="text-lg font-bold text-white">توقّع حركة الروبوت 🎯</h2>
+                <p class="text-slate-300 text-xs">اقرأ الأوامر البرمجية التالية وتتبع خريطة الحركة للتعرف على مكان وصول الروبوت:</p>
+            </div>
+
+            <!-- Code Command List -->
+            <div class="glass-card p-3 rounded-xl bg-slate-900/90 border border-slate-700 space-y-1.5 text-xs font-mono">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold bg-slate-800/80 p-2 rounded-lg">
+                    <i class="fa-solid fa-play"></i> 1. تحرك للأمام (خطوتان) ⬆️⬆️
+                </div>
+                <div class="flex items-center gap-2 text-purple-400 font-bold bg-slate-800/80 p-2 rounded-lg">
+                    <i class="fa-solid fa-rotate-right"></i> 2. استدر يمينًا (90 درجة) ➡️
+                </div>
+                <div class="flex items-center gap-2 text-emerald-400 font-bold bg-slate-800/80 p-2 rounded-lg">
+                    <i class="fa-solid fa-arrow-up"></i> 3. تحرك للأمام (خطوة واحدة) ⬆️
+                </div>
+            </div>
+
+            <!-- Grid Simulator Map -->
+            <div class="glass-card p-3 rounded-2xl border border-slate-700 space-y-2 text-center">
+                <span class="text-xs text-slate-300 font-bold block">🗺️ خريطة الحركة والمسار:</span>
+                <div class="grid grid-cols-3 gap-2 bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs font-bold">
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-rose-400 flex flex-col items-center justify-center">
+                        <span>الهدف (أ)</span>
+                        <span class="text-lg">🛑</span>
+                    </div>
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-emerald-400 flex flex-col items-center justify-center">
+                        <span>الهدف (ب)</span>
+                        <span class="text-lg">🎯</span>
+                    </div>
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-purple-400 flex flex-col items-center justify-center">
+                        <span>الهدف (ج)</span>
+                        <span class="text-lg">🏁</span>
+                    </div>
+
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-600">فارغ</div>
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-600">فارغ</div>
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-600">فارغ</div>
+
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-amber-400 flex flex-col items-center justify-center">
+                        <span>الهدف (د)</span>
+                        <span class="text-lg">⭐</span>
+                    </div>
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-lg text-slate-600">فارغ</div>
+                    <div class="p-3 bg-cyan-950/80 border border-cyan-500/50 rounded-lg text-cyan-300 flex flex-col items-center justify-center">
+                        <span>البداية</span>
+                        <span class="text-lg">🤖</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2" id="act5-options">
+                <!-- Target choices injected via JS -->
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(5)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act5-next-btn" onclick="nextQuestion(5)" disabled
+                    class="flex-1 py-3.5 bg-slate-800 text-slate-500 font-bold text-base rounded-xl transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <span>تأكيد النتيجة والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-6" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-amber-400 space-y-1">
+                <span class="text-xs text-amber-400 font-bold block">المحطة 3 💻 • النشاط 6</span>
+                <h2 class="text-lg font-bold text-white">أصلح البرنامج 🛠️</h2>
+                <p class="text-slate-300 text-xs">
+                    المهمة المطلوبة: <span class="text-cyan-300 font-bold">"التحرك للأمام ثم الاستدارة يمينًا"</span>.<br>
+                    اضغط على الأمر الخاطئ في الكود الحالي لاستبداله بالأمر الصحيح:
+                </p>
+            </div>
+
+            <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-700">
+                <span class="text-xs text-slate-400 font-bold block">البرنامج الحالي الفاسد:</span>
+                <div class="space-y-2" id="act6-code-blocks">
+                    <!-- Blocks injected via JS -->
+                </div>
+            </div>
+
+            <div id="act6-fix-picker" class="hidden glass-card p-4 rounded-2xl space-y-3 border border-slate-700">
+                <span class="text-xs text-amber-300 font-bold block">اختر الأمر البديل الصحيح:</span>
+                <div class="space-y-2" id="act6-replacement-opts">
+                    <!-- Replacement choices injected via JS -->
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(6)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act6-next-btn" onclick="nextQuestion(6)" disabled
+                    class="flex-1 py-3.5 bg-slate-800 text-slate-500 font-bold text-base rounded-xl transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <span>تأكيد التصحيح والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-7" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-emerald-400 space-y-1">
+                <span class="text-xs text-emerald-400 font-bold block">المحطة 4 🧩 • النشاط 7</span>
+                <h2 class="text-lg font-bold text-white">المحقق الصغير 🕵️‍♂️</h2>
+                <p class="text-slate-300 text-xs">الموقف: ضغطت على زر "تشغيل"، ولكن الروبوت لم يتحرك إطلاقاً ولا تضيء أي شاشة!</p>
+            </div>
+
+            <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-700">
+                <label class="block text-emerald-300 font-bold text-sm">
+                    ما هي الخطوة الأولى المنطقية التي تبدأ بفحصها فوراً؟
+                </label>
+                <div class="space-y-2.5" id="act7-options">
+                    <!-- Choices injected via JS -->
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(7)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act7-next-btn" onclick="nextQuestion(7)" disabled
+                    class="flex-1 py-3.5 bg-slate-800 text-slate-500 font-bold text-base rounded-xl transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <span>تأكيد الإجراء والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-8" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-emerald-400 space-y-1">
+                <span class="text-xs text-emerald-400 font-bold block">المحطة 4 🧩 • النشاط 8</span>
+                <h2 class="text-lg font-bold text-white">جرّب وحسّن (Try & Improve) 🔄</h2>
+                <p class="text-slate-300 text-xs">الموقف: تم تشغيل الروبوت للوصول لخط النهاية، لكنه توقف قبل الخط وبقي له 10 سم فقط!</p>
+            </div>
+
+            <div class="glass-card p-4 rounded-2xl space-y-3 border border-slate-700">
+                <label class="block text-emerald-300 font-bold text-sm">
+                    ⚙️ كيف يمكن للمهندس معالجة هذه المشكلة ليتجاوز الروبوت المسافة المتبقية ويصل لخط النهاية؟
+                </label>
+                <div class="space-y-2.5" id="act8-options">
+                    <!-- Choices injected via JS -->
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(8)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act8-next-btn" onclick="nextQuestion(8)" disabled
+                    class="flex-1 py-3.5 bg-slate-800 text-slate-500 font-bold text-base rounded-xl transition cursor-not-allowed flex items-center justify-center gap-2">
+                    <span>تأكيد التجربة والتالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-9" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-rose-400 space-y-1">
+                <span class="text-xs text-rose-400 font-bold block">المحطة 5 🚀 • تقييم ذاتي</span>
+                <h2 class="text-lg font-bold text-white">كيف ترى مهاراتك الآن؟ 🤖</h2>
+                <p class="text-slate-300 text-xs">قيم مستوى ثقتك في المهارات التالية (هذا التقييم للتطوير ولا يؤثر على درجاتك):</p>
+            </div>
+
+            <div class="space-y-3" id="act9-skills-container">
+                <!-- Skill Ratings injected via JS -->
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(9)" class="px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act9-next-btn" onclick="nextQuestion(9)"
+                    class="flex-1 py-3.5 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                    <span>الانتقال للاستبانة الأخيرة</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-10" class="hidden space-y-4">
+            <div class="glass-card p-4 rounded-2xl border-l-4 border-l-rose-400 space-y-1">
+                <span class="text-xs text-rose-400 font-bold block">المحطة 5 🚀 • انطباعك عن الرحلة</span>
+                <h2 class="text-lg font-bold text-white">شاركونا رأيكم الشغوف 💬</h2>
+            </div>
+
+            <div class="space-y-4">
+                <div class="glass-card p-4 rounded-2xl space-y-2 border border-slate-700">
+                    <label class="text-xs font-bold text-cyan-300 block">1. ما أكثر شيء استمتعت به في المستوى الأول؟</label>
+                    <div class="grid grid-cols-2 gap-2" id="act10-enjoyed">
+                        <!-- Choices via JS -->
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 rounded-2xl space-y-2 border border-slate-700">
+                    <label class="text-xs font-bold text-amber-300 block">2. لو أعطيناك روبوتًا جديدًا غدًا، ما أول شيء تريد أن تجعله يفعله؟ 🤔</label>
+                    <textarea id="act10-dream" rows="2" placeholder="اكتب فكرتك الإبداعية هنا..."
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition"></textarea>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="prevQuestion(10)" class="px-4 py-4 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-sm rounded-2xl border border-slate-700 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>السابق</span>
+                </button>
+                <button id="act10-next-btn" onclick="finishAssessment()"
+                    class="flex-1 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black text-lg rounded-2xl shadow-xl transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <span>🏆 إنهاء التحدي وعرض النتيجة</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-results" class="hidden space-y-5 text-center py-4">
+            <div class="glass-card p-6 rounded-3xl space-y-4 border border-cyan-500/30 shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-12 -left-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl"></div>
+                <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
+
+                <div class="inline-flex p-4 rounded-full bg-gradient-to-tr from-amber-500/20 via-yellow-400/20 to-cyan-500/20 border border-amber-400/40 text-6xl animate-bounce">
+                    👑
+                </div>
+                
+                <h2 class="text-2xl font-black text-white">مبارك يا مبرمج المستقبل! 🏅</h2>
+                <p id="result-student-name" class="text-lg font-black text-cyan-400">البطل المهندس: ...</p>
+
+                <p class="text-slate-300 text-xs leading-relaxed px-2">
+                    لقد أتممت جميع محطات المستوى الأول بنجاح باهر وأثبتت قدرتك العالية على التفكير الهندسي والمنطق البرمجي! 🚀
+                </p>
+
+                <div class="space-y-2 text-right pt-2" id="skill-stars-container">
+                    <!-- Dynamic Star Rows -->
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <button onclick="toggleTrainerReportModal()"
+                    class="w-full py-4 bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-base rounded-2xl shadow-xl transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-contract"></i>
+                    <span>عرض تقرير المدرب والتصوير 📸</span>
+                </button>
+
+                <button onclick="location.reload()"
+                    class="w-full py-3 bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>إعادة التحدي من البداية</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="trainer-report-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md hidden z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+        <div class="glass-card w-full max-w-lg p-5 rounded-3xl space-y-4 border border-slate-700 max-h-[90vh] flex flex-col justify-between">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3 shrink-0">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-check text-cyan-400 text-xl"></i>
+                    <h3 class="font-bold text-white text-base">📋 تقرير المدرب التفصيلي</h3>
+                </div>
+                <button onclick="toggleTrainerReportModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Screenshot Banner -->
+            <div class="bg-amber-500/15 border border-amber-500/40 p-3.5 rounded-2xl text-amber-300 text-xs font-bold flex items-center gap-3">
+                <div class="text-2xl shrink-0">📸</div>
+                <div>
+                    <span class="block text-amber-200 font-extrabold text-sm mb-0.5">تنبيه هام للطالب:</span>
+                    يرجى تصوير هذه الشاشة (لقطة شاشة / Screenshot) وإرسالها للمعلم أو المدرب لتوثيق درجتك وإنجازك! 🚀
+                </div>
+            </div>
+
+            <div class="overflow-y-auto space-y-3 pr-1 flex-1 text-xs" id="trainer-report-content">
+                <!-- Dynamic Content injected via JavaScript -->
+            </div>
+
+            <div class="flex gap-2 shrink-0 pt-2 border-t border-slate-800">
+                <button onclick="copyTrainerData()" class="flex-1 py-3 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>نسخ نص التقرير</span>
+                </button>
+                <button onclick="toggleTrainerReportModal()" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-notification" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-900 border border-cyan-500/50 text-cyan-300 px-4 py-2.5 rounded-xl text-xs font-bold shadow-2xl hidden items-center gap-2 z-50">
+        <i class="fa-solid fa-circle-info text-cyan-400"></i>
+        <span id="toast-text"></span>
+    </div>
+
+    <script>
+        // Global state tracking
+        let studentData = {
+            name: '',
+            phone: '',
+            answers: {},
+            actScores: {
+                act1: 0,
+                act2: 0,
+                act3: 0,
+                act4: 0,
+                act5: 0,
+                act6: 0,
+                act7: 0,
+                act8: 0
+            },
+            scores: {
+                station1: 0, // max 2
+                station2: 0, // max 2
+                station3: 0, // max 2
+                station4: 0, // max 2
+            },
+            selfRating: {},
+            survey: {}
+        };
+
+        let currentStep = 0;
+        const totalSteps = 10;
+
+        function prevQuestion(current) {
+            playSound('click');
+            if (current > 1) {
+                currentStep = current - 1;
+                showStep(currentStep);
+            }
+        }
+
+        function toggleTeacherDashboard() {
+            playSound('click');
+            showToast('⚙️ تم إعداد المعلم والربط التلقائي للنتائج بنجاح');
+        }
+
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function startAssessment() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            const phoneInput = document.getElementById('parent-phone').value.trim();
+            const errorBox = document.getElementById('welcome-error');
+            const errorText = document.getElementById('welcome-error-text');
+
+            const nameWords = nameInput.split(/\s+/).filter(w => w.length > 0);
+            if (!nameInput || nameWords.length < 3) {
+                errorBox.classList.remove('hidden');
+                errorText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> يرجى إدخال اسمك الثلاثي كاملاً (مثال: أحمد محمد علي)';
+                playSound('wrong');
+                return;
+            }
+
+            const phoneRegex = /^05\d{8}$/;
+            if (!phoneInput || !phoneRegex.test(phoneInput)) {
+                errorBox.classList.remove('hidden');
+                errorText.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> يرجى إدخال رقم جوال صحيح مكون من 10 أرقام ويبدأ بـ 05 (مثال: 0512345678)';
+                playSound('wrong');
+                return;
+            }
+
+            errorBox.classList.add('hidden');
+            studentData.name = nameInput;
+            studentData.phone = phoneInput;
+
+            playSound('correct');
+            document.getElementById('step-0').classList.add('hidden');
+            document.getElementById('app-header').classList.remove('hidden');
+            
+            currentStep = 1;
+            showStep(1);
+        }
+
+        function showStep(stepNum) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            const stepEl = document.getElementById(`step-${stepNum}`);
+            if (stepEl) stepEl.classList.remove('hidden');
+
+            document.getElementById('progress-text').innerText = `${stepNum} / ${totalSteps}`;
+            const circle = document.getElementById('progress-circle');
+            const circumference = 81.68;
+            const offset = circumference - (stepNum / totalSteps) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            const stationTitleEl = document.getElementById('current-station-title');
+            if (stepNum <= 2) stationTitleEl.innerText = 'المحطة 1: الأساسيات';
+            else if (stepNum <= 4) stationTitleEl.innerText = 'المحطة 2: التركيب والقطع';
+            else if (stepNum <= 6) stationTitleEl.innerText = 'المحطة 3: البرمجة والمنطق';
+            else if (stepNum <= 8) stationTitleEl.innerText = 'المحطة 4: حل المشكلات';
+            else stationTitleEl.innerText = 'المحطة 5: التقييم الختامي';
+
+            // Lazy initialization of activity views
+            if (stepNum === 1 && !document.getElementById('act1-grid').children.length) initAct1();
+            if (stepNum === 2 && !document.getElementById('act2-parts').children.length) initAct2();
+            if (stepNum === 3 && !document.getElementById('act3-steps-container').children.length) initAct3();
+            if (stepNum === 4 && !document.getElementById('act4-options').children.length) initAct4();
+            if (stepNum === 5 && !document.getElementById('act5-options').children.length) initAct5();
+            if (stepNum === 6 && !document.getElementById('act6-code-blocks').children.length) initAct6();
+            if (stepNum === 7 && !document.getElementById('act7-options').children.length) initAct7();
+            if (stepNum === 8 && !document.getElementById('act8-options').children.length) initAct8();
+            if (stepNum === 9 && !document.getElementById('act9-skills-container').children.length) initAct9();
+            if (stepNum === 10 && !document.getElementById('act10-enjoyed').children.length) initAct10();
+        }
+
+        function nextQuestion(current) {
+            playSound('click');
+            if (current < totalSteps) {
+                currentStep = current + 1;
+                showStep(currentStep);
+            }
+        }
+
+        function initAct1() {
+            const grid = document.getElementById('act1-grid');
+            grid.innerHTML = '';
+
+            const items = shuffleArray([
+                { 
+                    id: 'robot', 
+                    title: 'ذراع روبوت صناعي', 
+                    subtitle: 'آلة قابلة للبرمجة مع مستشعرات',
+                    icon: 'fa-robot text-cyan-400',
+                    isRobot: true
+                },
+                { 
+                    id: 'blender', 
+                    title: 'خلاط فواكه كهربائي', 
+                    subtitle: 'جهاز يدوي مفتاحي فقط',
+                    icon: 'fa-blender text-amber-400',
+                    isRobot: false
+                },
+                { 
+                    id: 'fan', 
+                    title: 'مروحة سقف تقليدية', 
+                    subtitle: 'تدور بسرعة واحدة بدون تفكير',
+                    icon: 'fa-fan font-bold text-blue-400',
+                    isRobot: false
+                },
+                { 
+                    id: 'toaster', 
+                    title: 'محمصة خبز بسيطة', 
+                    subtitle: 'تعمل بمؤقت حراري ثنائي',
+                    icon: 'fa-bread-slice text-orange-400',
+                    isRobot: false
+                }
+            ]);
+
+            items.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'group glass-card-interactive p-4 rounded-2xl flex flex-col items-center justify-center space-y-2 border border-slate-700 hover:border-cyan-500/50 transition-all duration-300 text-center relative overflow-hidden';
+                btn.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center justify-center text-2xl mb-1">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </div>
+                    <div class="space-y-1 w-full">
+                        <span class="text-xs font-bold text-slate-100 block leading-tight">${item.title}</span>
+                        <span class="text-[10px] font-semibold text-slate-400 block">${item.subtitle}</span>
+                    </div>
+                `;
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act1-grid > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+                    
+                    studentData.answers['act1_isRobot'] = item.isRobot;
+                    studentData.answers['act1_selected'] = item.title;
+                    showAct1Reasons();
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function showAct1Reasons() {
+            const reasonBox = document.getElementById('act1-reason-box');
+            reasonBox.classList.remove('hidden');
+
+            const reasonsDiv = document.getElementById('act1-reasons');
+            reasonsDiv.innerHTML = '';
+
+            const reasons = shuffleArray([
+                { text: 'يحتوي على حساسات ومعالج ينفذ الأوامر الذكية تلقائياً 🧠📡', correct: true },
+                { text: 'لأنه يعمل بالكهرباء فقط ويحتاج إنسان يضغطه بيديه باستمرار ⚡', correct: false },
+                { text: 'لأنه يدور بسرعة فقط دون التفكير 🌀', correct: false }
+            ]);
+
+            reasons.forEach(r => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-xl text-xs text-right bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-semibold border border-slate-700 transition';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act1-reasons > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+
+                    if (studentData.answers['act1_isRobot'] && r.correct) {
+                        studentData.actScores.act1 = 1;
+                    } else {
+                        studentData.actScores.act1 = 0;
+                    }
+                    studentData.answers['act1_reason'] = r.text;
+
+                    const nextBtn = document.getElementById('act1-next-btn');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "flex-1 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer";
+                };
+                btn.innerText = r.text;
+                reasonsDiv.appendChild(btn);
+            });
+        }
+
+        let act2SelectedParts = [];
+        function initAct2() {
+            const container = document.getElementById('act2-parts');
+            container.innerHTML = '';
+            act2SelectedParts = [];
+
+            const parts = shuffleArray([
+                { id: 'hub', title: 'عقل الروبوت (HUB) 🧠', icon: '💻', isEssential: true },
+                { id: 'motor', title: 'المحركات ⚙️', icon: '⚙️', isEssential: true },
+                { id: 'wheel', title: 'العجلات 🛞', icon: '🛞', isEssential: true },
+                { id: 'sticker', title: 'ملصق زينة 🎨', icon: '🎨', isEssential: false },
+                { id: 'cup', title: 'كوب ماء 🥤', icon: '🥤', isEssential: false },
+                { id: 'light', title: 'ضوء ديكور 💡', icon: '💡', isEssential: false }
+            ]);
+
+            parts.forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = 'glass-card-interactive p-3 rounded-2xl flex flex-col items-center justify-center space-y-1 border border-slate-700 text-center';
+                btn.innerHTML = `
+                    <span class="text-3xl">${p.icon}</span>
+                    <span class="text-[11px] font-bold text-slate-200">${p.title}</span>
+                `;
+                btn.onclick = () => {
+                    playSound('click');
+                    btn.classList.toggle('selected-card');
+                    if (btn.classList.contains('selected-card')) {
+                        act2SelectedParts.push(p);
+                    } else {
+                        act2SelectedParts = act2SelectedParts.filter(x => x.id !== p.id);
+                    }
+
+                    if (act2SelectedParts.length >= 3) {
+                        showAct2MotorQuestion();
+                    }
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function showAct2MotorQuestion() {
+            const motorBox = document.getElementById('act2-motor-question');
+            motorBox.classList.remove('hidden');
+
+            const optsDiv = document.getElementById('act2-motor-opts');
+            optsDiv.innerHTML = '';
+
+            const options = shuffleArray([
+                { text: 'تحويل الطاقة الكهربائية إلى حركة تدويرية لتحريك الهيكل والعجلات ⚙️🔄', correct: true },
+                { text: 'تخزين الصور والموسيقى داخل الروبوت 🎵', correct: false },
+                { text: 'إضاءة المكان بالألوان المختلفة 🌈', correct: false }
+            ]);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-xl text-xs text-right bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-semibold border border-slate-700 transition';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act2-motor-opts > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+
+                    const essentials = act2SelectedParts.filter(p => p.isEssential).length;
+                    if (essentials >= 2 && opt.correct) {
+                        studentData.actScores.act2 = 1;
+                    } else {
+                        studentData.actScores.act2 = 0;
+                    }
+                    studentData.answers['act2_motor'] = opt.text;
+
+                    const nextBtn = document.getElementById('act2-next-btn');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "flex-1 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer";
+                };
+                btn.innerText = opt.text;
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        let act3Steps = [
+            { id: 1, text: 'تركيب الهيكل الأساسي وعقل الروبوت (HUB) والبطارية ⚙️🧠🔋', correctOrder: 1 },
+            { id: 2, text: 'تركيب المحركات والحساسات ⚙️📡', correctOrder: 2 },
+            { id: 3, text: 'تركيب العجلات والأسلاك بين المحركات والحساسات وعقل الروبوت 🛞🔌', correctOrder: 3 },
+            { id: 4, text: 'البرمجة 💻', correctOrder: 4 }
+        ];
+
+        function initAct3() {
+            act3Steps.sort(() => Math.random() - 0.5);
+            renderAct3();
+        }
+
+        function renderAct3() {
+            const container = document.getElementById('act3-steps-container');
+            container.innerHTML = '';
+
+            act3Steps.forEach((step, idx) => {
+                const item = document.createElement('div');
+                item.className = 'glass-card p-3 rounded-xl flex items-center justify-between border border-slate-700 text-xs font-bold text-slate-200';
+                
+                const textSpan = document.createElement('span');
+                textSpan.className = 'flex-1 pl-2';
+                textSpan.textContent = `${idx + 1}. ${step.text}`;
+
+                const btnGroup = document.createElement('div');
+                btnGroup.className = 'flex gap-1 shrink-0';
+
+                if (idx > 0) {
+                    const upBtn = document.createElement('button');
+                    upBtn.className = 'w-7 h-7 bg-slate-800 hover:bg-slate-700 rounded-lg text-cyan-400 flex items-center justify-center';
+                    upBtn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+                    upBtn.onclick = () => moveAct3Step(idx, -1);
+                    btnGroup.appendChild(upBtn);
+                }
+
+                if (idx < act3Steps.length - 1) {
+                    const downBtn = document.createElement('button');
+                    downBtn.className = 'w-7 h-7 bg-slate-800 hover:bg-slate-700 rounded-lg text-cyan-400 flex items-center justify-center';
+                    downBtn.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+                    downBtn.onclick = () => moveAct3Step(idx, 1);
+                    btnGroup.appendChild(downBtn);
+                }
+
+                item.appendChild(textSpan);
+                item.appendChild(btnGroup);
+                container.appendChild(item);
+            });
+
+            const isCorrect = act3Steps.every((s, i) => s.correctOrder === i + 1);
+            studentData.actScores.act3 = isCorrect ? 1 : 0;
+            studentData.answers['act3'] = { steps: act3Steps.map(s => s.id) };
+        }
+
+        function moveAct3Step(idx, dir) {
+            playSound('click');
+            const temp = act3Steps[idx];
+            act3Steps[idx] = act3Steps[idx + dir];
+            act3Steps[idx + dir] = temp;
+            renderAct3();
+        }
+
+        function initAct4() {
+            const optsDiv = document.getElementById('act4-options');
+            optsDiv.innerHTML = '';
+
+            const options = shuffleArray([
+                { text: 'سوف يدور الروبوت في دائرة لأن محركًا واحدًا فقط هو الذي يعمل! 🔄', correct: true },
+                { text: 'سوف يتحرك للخلف تلقائيًا 🔙', correct: false },
+                { text: 'سوف تضاعف سرعة الروبوت للأمام بشكل مستقيم 🚀', correct: false }
+            ]);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-xl text-xs text-right bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-semibold border border-slate-700 transition';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act4-options > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+                    studentData.actScores.act4 = opt.correct ? 1 : 0;
+                    studentData.answers['act4'] = { correct: opt.correct };
+
+                    const nextBtn = document.getElementById('act4-next-btn');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "flex-1 py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer";
+                };
+                btn.innerText = opt.text;
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        function initAct5() {
+            const optsDiv = document.getElementById('act5-options');
+            optsDiv.innerHTML = '';
+
+            const options = shuffleArray([
+                { target: 'الهدف (ب)', correct: true },
+                { target: 'الهدف (أ)', correct: false },
+                { target: 'الهدف (ج)', correct: false },
+                { target: 'الهدف (د)', correct: false }
+            ]);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-xl text-xs text-right bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition flex items-center justify-between px-4';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act5-options > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+                    studentData.actScores.act5 = opt.correct ? 1 : 0;
+                    studentData.answers['act5'] = { target: opt.target, correct: opt.correct };
+
+                    const nextBtn = document.getElementById('act5-next-btn');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer";
+                };
+                btn.innerHTML = `<span>سيصل الروبوت إلى: <strong class="text-amber-400">${opt.target}</strong></span> <i class="fa-solid fa-bullseye text-slate-500"></i>`;
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        function initAct6() {
+            const blocksDiv = document.getElementById('act6-code-blocks');
+            blocksDiv.innerHTML = '';
+
+            const blocks = [
+                { id: 1, text: '1. تحرك للأمام ⬆️', isWrong: false },
+                { id: 2, text: '2. استدر يسارًا ⬅️ (اضغط هنا للتعديل)', isWrong: true },
+                { id: 3, text: '3. تحرك للأمام ⬆️', isWrong: false }
+            ];
+
+            blocks.forEach(b => {
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-xl text-xs font-bold border ${b.isWrong ? 'bg-rose-500/10 border-rose-500/40 text-rose-300 cursor-pointer animate-pulse' : 'bg-slate-800 border-slate-700 text-slate-300'}`;
+                div.innerText = b.text;
+                if (b.isWrong) {
+                    div.onclick = () => {
+                        playSound('click');
+                        div.classList.remove('animate-pulse');
+                        div.classList.add('selected-card');
+                        showAct6Replacements();
+                    };
+                }
+                blocksDiv.appendChild(div);
+            });
+        }
+
+        function showAct6Replacements() {
+            const picker = document.getElementById('act6-fix-picker');
+            picker.classList.remove('hidden');
+
+            const optsDiv = document.getElementById('act6-replacement-opts');
+            optsDiv.innerHTML = '';
+
+            const replacements = shuffleArray([
+                { text: 'استدر يمينًا ➡️', correct: true },
+                { text: 'توقف تمامًا 🛑', correct: false },
+                { text: 'تحرك للخلف ⬇️', correct: false }
+            ]);
+
+            replacements.forEach(rep => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-2.5 rounded-xl text-xs text-right bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-bold border border-slate-700 transition';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act6-replacement-opts > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+                    studentData.actScores.act6 = rep.correct ? 1 : 0;
+                    studentData.answers['act6'] = { fixedCorrectly: rep.correct };
+
+                    const nextBtn = document.getElementById('act6-next-btn');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "flex-1 py-3.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer";
+                };
+                btn.innerText = rep.text;
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        function initAct7() {
+            const optsDiv = document.getElementById('act7-options');
+            optsDiv.innerHTML = '';
+
+            const options = shuffleArray([
+                { text: 'التأكد من تشغيل مفتاح الطاقة واختبار شحن البطارية 🔋', correct: true },
+                { text: 'إعادة كتابة البرنامج كاملاً من البداية 💻', correct: false },
+                { text: 'فك الروبوت وإعادة تركيبه بالكامل 🛠️', correct: false }
+            ]);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-xl text-xs text-right bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-semibold border border-slate-700 transition';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act7-options > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+                    studentData.actScores.act7 = opt.correct ? 1 : 0;
+                    studentData.answers['act7'] = { correct: opt.correct };
+
+                    const nextBtn = document.getElementById('act7-next-btn');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer";
+                };
+                btn.innerText = opt.text;
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        function initAct8() {
+            const optionsDiv = document.getElementById('act8-options');
+            optionsDiv.innerHTML = '';
+
+            const solutions = shuffleArray([
+                { text: 'زيادة مسافة الحركة أو زمن الدوران في الكود لتغطية الـ 10 سم المتبقية 📏', correct: true },
+                { text: 'تقليل مسافة الحركة في الكود البرمجي ⏱️', correct: false },
+                { text: 'عكس اتجاه حركة العجلات للخلف 🔄', correct: false }
+            ]);
+
+            solutions.forEach(sol => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full p-3 rounded-xl text-xs text-right bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-semibold border border-slate-700 transition';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act8-options > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+                    studentData.actScores.act8 = sol.correct ? 1 : 0;
+                    studentData.answers['act8'] = { correct: sol.correct };
+
+                    const nextBtn = document.getElementById('act8-next-btn');
+                    nextBtn.disabled = false;
+                    nextBtn.className = "flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-base rounded-xl shadow-lg transition flex items-center justify-center gap-2 cursor-pointer";
+                };
+                btn.innerText = sol.text;
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function initAct9() {
+            const container = document.getElementById('act9-skills-container');
+            container.innerHTML = '';
+
+            const skills = [
+                { id: 'assembly', title: 'تركيب الروبوت والمكونات ⚙️' },
+                { id: 'coding', title: 'برمجة الأوامر والحركة 💻' },
+                { id: 'problem', title: 'اكتشاف وحل المشكلات 🧩' }
+            ];
+
+            skills.forEach(sk => {
+                const card = document.createElement('div');
+                card.className = 'glass-card p-3 rounded-2xl space-y-2 border border-slate-700';
+                card.innerHTML = `
+                    <span class="text-xs font-bold text-slate-200 block">${sk.title}</span>
+                    <div class="grid grid-cols-3 gap-1.5 text-center">
+                        <button onclick="rateSkill('${sk.id}', 'أحتاج مساعدة 🟡', this)" class="rate-btn-${sk.id} p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-[11px] font-bold text-amber-400 border border-slate-700">🟡 أحتاج مساعدة</button>
+                        <button onclick="rateSkill('${sk.id}', 'أستطيع بنفسي 🟢', this)" class="rate-btn-${sk.id} p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-[11px] font-bold text-emerald-400 border border-slate-700">🟢 أستطيع بنفسي</button>
+                        <button onclick="rateSkill('${sk.id}', 'أستطيع وأشرح لغيري 🔵', this)" class="rate-btn-${sk.id} p-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-[11px] font-bold text-cyan-400 border border-slate-700">🔵 أستطيع وأشرح لغيري</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function rateSkill(skillId, val, btnEl) {
+            playSound('click');
+            document.querySelectorAll(`.rate-btn-${skillId}`).forEach(b => b.classList.remove('selected-card'));
+            btnEl.classList.add('selected-card');
+            studentData.selfRating[skillId] = val;
+        }
+
+        function initAct10() {
+            const enjoyedDiv = document.getElementById('act10-enjoyed');
+            enjoyedDiv.innerHTML = '';
+
+            const choices = [
+                'تركيب وتجميع الروبوت ⚙️',
+                'برمجة الحركة والمسارات 💻',
+                'خوض التحديات وحل المشكلات 🧩',
+                'رؤية الروبوت يتحرك بنجاح 🚀'
+            ];
+
+            choices.forEach(ch => {
+                const btn = document.createElement('button');
+                btn.className = 'p-2.5 rounded-xl text-xs text-center bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold border border-slate-700 transition';
+                btn.onclick = () => {
+                    playSound('click');
+                    document.querySelectorAll('#act10-enjoyed > button').forEach(b => b.classList.remove('selected-card'));
+                    btn.classList.add('selected-card');
+                    studentData.survey['enjoyed'] = ch;
+                };
+                btn.innerText = ch;
+                enjoyedDiv.appendChild(btn);
+            });
+        }
+
+        function finishAssessment() {
+            playSound('correct');
+            studentData.survey['dream'] = document.getElementById('act10-dream').value.trim();
+
+            studentData.scores.station1 = (studentData.actScores.act1 || 0) + (studentData.actScores.act2 || 0);
+            studentData.scores.station2 = (studentData.actScores.act3 || 0) + (studentData.actScores.act4 || 0);
+            studentData.scores.station3 = (studentData.actScores.act5 || 0) + (studentData.actScores.act6 || 0);
+            studentData.scores.station4 = (studentData.actScores.act7 || 0) + (studentData.actScores.act8 || 0);
+
+            document.getElementById('step-10').classList.add('hidden');
+            document.getElementById('app-header').classList.add('hidden');
+            document.getElementById('step-results').classList.remove('hidden');
+
+            document.getElementById('result-student-name').innerText = `البطل المهندس: ${studentData.name}`;
+
+            renderSkillStars();
+            triggerConfetti();
+        }
+
+        function renderSkillStars() {
+            const container = document.getElementById('skill-stars-container');
+            container.innerHTML = '';
+
+            const stations = [
+                { name: 'فهم أساسيات الروبوت 🤖', score: studentData.scores.station1, max: 2 },
+                { name: 'التركيب والمكونات ⚙️', score: studentData.scores.station2, max: 2 },
+                { name: 'البرمجة والحركة 💻', score: studentData.scores.station3, max: 2 },
+                { name: 'حل المشكلات والتفكير 🧩', score: studentData.scores.station4, max: 2 }
+            ];
+
+            stations.forEach(st => {
+                let starsCount = 1;
+                if (st.score === 2) starsCount = 4;
+                else if (st.score === 1) starsCount = 2;
+                else starsCount = 1;
+
+                let starsHTML = '';
+                for (let i = 0; i < 4; i++) {
+                    if (i < starsCount) starsHTML += '<i class="fa-solid fa-star text-amber-400"></i>';
+                    else starsHTML += '<i class="fa-regular fa-star text-slate-600"></i>';
+                }
+
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-xs font-bold';
+                row.innerHTML = `
+                    <span class="text-slate-200">${st.name}</span>
+                    <div class="flex gap-1 text-sm">${starsHTML}</div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function toggleTrainerReportModal() {
+            playSound('click');
+            const modal = document.getElementById('trainer-report-modal');
+            modal.classList.toggle('hidden');
+
+            if (!modal.classList.contains('hidden')) {
+                const content = document.getElementById('trainer-report-content');
+                const totalScore = (studentData.scores.station1 || 0) + (studentData.scores.station2 || 0) + (studentData.scores.station3 || 0) + (studentData.scores.station4 || 0);
+
+                content.innerHTML = `
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex justify-between items-center text-slate-200">
+                            <strong>اسم الطالب:</strong>
+                            <span class="text-cyan-400 font-bold text-sm">${studentData.name}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-200">
+                            <strong>جوال ولي الأمر:</strong>
+                            <span class="text-emerald-400 font-mono font-bold">${studentData.phone}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-200 border-t border-slate-800 pt-2">
+                            <strong>المجموع الكلي:</strong>
+                            <span class="text-amber-400 font-extrabold text-sm">${totalScore} / 8</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-1.5">
+                        <span class="text-cyan-300 font-bold block border-b border-slate-800 pb-1">📊 نتائج المحطات:</span>
+                        <div class="flex justify-between"><span>المحطة 1 (الأساسيات):</span><span class="font-bold text-slate-200">${studentData.scores.station1} / 2</span></div>
+                        <div class="flex justify-between"><span>المحطة 2 (التركيب):</span><span class="font-bold text-slate-200">${studentData.scores.station2} / 2</span></div>
+                        <div class="flex justify-between"><span>المحطة 3 (البرمجة):</span><span class="font-bold text-slate-200">${studentData.scores.station3} / 2</span></div>
+                        <div class="flex justify-between"><span>المحطة 4 (حل المشكلات):</span><span class="font-bold text-slate-200">${studentData.scores.station4} / 2</span></div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-1.5">
+                        <span class="text-purple-300 font-bold block border-b border-slate-800 pb-1">🌟 التقييم الذاتي:</span>
+                        <div class="flex justify-between"><span>التركيب والمكونات:</span><span class="text-slate-300">${studentData.selfRating.assembly || 'لم يحدد'}</span></div>
+                        <div class="flex justify-between"><span>البرمجة والحركة:</span><span class="text-slate-300">${studentData.selfRating.coding || 'لم يحدد'}</span></div>
+                        <div class="flex justify-between"><span>حل المشكلات:</span><span class="text-slate-300">${studentData.selfRating.problem || 'لم يحدد'}</span></div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-1.5">
+                        <span class="text-amber-300 font-bold block border-b border-slate-800 pb-1">💬 إجابات الاستبيان الكاملة:</span>
+                        <div><strong>أكثر شيء استمتع به:</strong> <span class="text-slate-300">${studentData.survey.enjoyed || 'لم يحدد'}</span></div>
+                        <div><strong>فكرته الإبداعية للروبوت القادم:</strong> <span class="text-cyan-300 font-bold block mt-1 bg-slate-950 p-2 rounded-xl border border-slate-800">${studentData.survey.dream || 'لا توجد فكرة مكتوبة'}</span></div>
+                    </div>
+                `;
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            if (!toast) return;
+            document.getElementById('toast-text').innerText = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 3000);
+        }
+
+        function copyTrainerData() {
+            const totalScore = (studentData.scores.station1 || 0) + (studentData.scores.station2 || 0) + (studentData.scores.station3 || 0) + (studentData.scores.station4 || 0);
+            const textToCopy = "📋 تقرير تقييم ختام المستوى الأول في الروبوتكس:\n" +
+                "👤 اسم الطالب: " + studentData.name + "\n" +
+                "📱 الجوال: " + studentData.phone + "\n" +
+                "🏆 المجموع الكلي: " + totalScore + " / 8\n" +
+                "-----------------------------------\n" +
+                "- الأساسيات: " + studentData.scores.station1 + "/2\n" +
+                "- التركيب: " + studentData.scores.station2 + "/2\n" +
+                "- البرمجة: " + studentData.scores.station3 + "/2\n" +
+                "- حل المشكلات: " + studentData.scores.station4 + "/2\n" +
+                "-----------------------------------\n" +
+                "🌟 التقييم الذاتي:\n" +
+                "- التركيب: " + (studentData.selfRating.assembly || 'غير محدد') + "\n" +
+                "- البرمجة: " + (studentData.selfRating.coding || 'غير محدد') + "\n" +
+                "- حل المشكلات: " + (studentData.selfRating.problem || 'غير محدد') + "\n" +
+                "-----------------------------------\n" +
+                "💬 الاستبيان:\n" +
+                "- أكثر شيء استمتع به: " + (studentData.survey.enjoyed || 'غير محدد') + "\n" +
+                "- الفكرة الإبداعية: " + (studentData.survey.dream || 'لا يوجد');
+
+            fallbackCopy(textToCopy);
+        }
+
+        function fallbackCopy(textToCopy) {
+            const ta = document.createElement('textarea');
+            ta.value = textToCopy;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('تم نسخ تقرير المدرب بنجاح! 📋');
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'click') {
+                    osc.frequency.value = 400;
+                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.05);
+                } else if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.25);
+                } else if (type === 'wrong') {
+                    osc.frequency.setValueAtTime(200, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.15);
+                }
+            } catch(e) {}
+        }
+
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#06B6D4', '#8B5CF6', '#F59E0B', '#10B981', '#EC4899'];
+
+            for (let i = 0; i < 90; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    vy: Math.random() * 3 + 2,
+                    vx: Math.random() * 2 - 1
+                });
+            }
+
+            function render() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.vy;
+                    p.x += p.vx;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                if (particles.some(p => p.y < canvas.height)) {
+                    requestAnimationFrame(render);
+                }
+            }
+            render();
+        }
+
+        window.onload = function() {
+            console.log("Robotics Level 1 Final Challenge Application Loaded Successfully.");
+        };
+    </script>
+</body>
+</html>
