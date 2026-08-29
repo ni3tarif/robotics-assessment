@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تحدي ختام المستوى الأول في الروبوتكس 🤖🚀</title>
+    <title>تحدي ختام المستوى الأول | انطلاق في الروبوتكس 🤖🚀</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -107,7 +107,7 @@
                     <i class="fa-solid fa-robot"></i>
                 </div>
                 <div>
-                    <h1 class="text-xs font-bold text-slate-300">تحدي ختام المستوى الأول</h1>
+                    <h1 class="text-xs font-bold text-slate-300 whitespace-nowrap">تحدي ختام المستوى الأول | انطلاق</h1>
                     <span id="current-station-title" class="text-xs font-black text-cyan-400">المحطة 1: الأساسيات</span>
                 </div>
             </div>
@@ -140,8 +140,8 @@
                 <div class="inline-flex p-4 rounded-3xl bg-gradient-to-tr from-cyan-500/20 via-purple-500/20 to-emerald-500/20 border border-cyan-500/30 text-cyan-400 text-6xl animate-bounce shadow-2xl">
                     🤖
                 </div>
-                <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-400">
-                    تحدي ختام المستوى الأول
+                <h1 class="text-lg sm:text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-400 whitespace-nowrap leading-tight tracking-tight">
+                    تحدي ختام المستوى الأول | انطلاق
                 </h1>
                 <p class="text-slate-300 text-xs md:text-sm font-semibold leading-relaxed px-2">
                     أهلاً بك يا بطل الروبوتكس المبدع! 🚀<br>
@@ -182,7 +182,7 @@
             <div class="glass-card p-4 rounded-2xl border-l-4 border-l-cyan-400 space-y-1">
                 <span class="text-xs text-cyan-400 font-bold block">المحطة 1 🤖 • النشاط 1</span>
                 <h2 class="text-lg font-bold text-white">هل هو روبوت؟ 🔍</h2>
-                <p class="text-slate-300 text-xs">اختر بطاقة الجهاز الذي يُمثّل **روبوتًا ذكيًا** من بين الصور التالية:</p>
+                <p class="text-slate-300 text-xs">اختر بطاقة الجهاز الذي يُمثّل روبوتًا ذكيًا من بين الصور التالية:</p>
             </div>
 
             <div class="grid grid-cols-2 gap-3" id="act1-grid">
@@ -209,7 +209,7 @@
             <div class="glass-card p-4 rounded-2xl border-l-4 border-l-cyan-400 space-y-1">
                 <span class="text-xs text-cyan-400 font-bold block">المحطة 1 🤖 • النشاط 2</span>
                 <h2 class="text-lg font-bold text-white">ابنِ روبوتك المتحرك 🧩</h2>
-                <p class="text-slate-300 text-xs">اضغط لتحديد **المكونات الأساسية** التي يحتاجها الروبوت لكي **يتحرك**:</p>
+                <p class="text-slate-300 text-xs">اضغط لتحديد المكونات الأساسية التي يحتاجها الروبوت لكي يتحرك:</p>
             </div>
 
             <div class="grid grid-cols-3 gap-2.5" id="act2-parts">
@@ -534,7 +534,7 @@
                 <p id="result-student-name" class="text-lg font-black text-cyan-400">البطل المهندس: ...</p>
 
                 <p class="text-slate-300 text-xs leading-relaxed px-2">
-                   أحسنت يا بطل! 🎉 لقد أكملت رحلة التحدي بنجاح، وأظهرت روحًا رائعة في التفكير والاستكشاف وحل المشكلات. استمر في التعلم والإبداع، فالمستقبل ينتظرك! 🚀🤖
+                    أحسنت يا بطل! 🎉 لقد أكملت رحلة التحدي بنجاح، وأظهرت روحًا رائعة في التفكير والاستكشاف وحل المشكلات. استمر في التعلم والإبداع، فالمستقبل ينتظرك! 🚀🤖
                 </p>
 
                 <div class="space-y-2 text-right pt-2" id="skill-stars-container">
@@ -542,14 +542,22 @@
                 </div>
             </div>
 
-            <div class="space-y-2">
-                <button onclick="toggleTrainerReportModal()"
+            <div class="space-y-3">
+                <div class="bg-amber-500/15 border border-amber-400/40 p-4 rounded-2xl text-amber-200 text-xs font-bold leading-relaxed flex items-start gap-3 text-right">
+                    <div class="text-xl shrink-0">⚠️</div>
+                    <div>
+                        <div class="font-black text-amber-100 text-sm mb-1">مهم جدًا: لا تنسَ إرسال تقريرك!</div>
+                        بعد الضغط على <strong>«نسخ نص التقرير»</strong>، أرسل النص المنسوخ إلى المعلم أو المدرب لتوثيق درجتك وإنجازك.
+                    </div>
+                </div>
+
+                <button onclick="copyTrainerData()"
                     class="w-full py-4 bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-base rounded-2xl shadow-xl transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-file-contract"></i>
-                    <span>عرض تقرير المدرب والتصوير 📸</span>
+                    <i class="fa-solid fa-copy"></i>
+                    <span>نسخ نص التقرير 📋</span>
                 </button>
 
-                <button onclick="location.reload()"
+                <button onclick="resetChallenge()"
                     class="w-full py-3 bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-rotate-right"></i>
                     <span>إعادة التحدي من البداية</span>
@@ -558,43 +566,6 @@
         </section>
 
     </main>
-
-    <div id="trainer-report-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md hidden z-50 flex items-center justify-center p-3 md:p-6 overflow-y-auto">
-        <div class="glass-card w-full max-w-lg p-5 rounded-3xl space-y-4 border border-slate-700 max-h-[90vh] flex flex-col justify-between">
-            <div class="flex items-center justify-between border-b border-slate-700 pb-3 shrink-0">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-check text-cyan-400 text-xl"></i>
-                    <h3 class="font-bold text-white text-base">📋 تقرير المدرب التفصيلي</h3>
-                </div>
-                <button onclick="toggleTrainerReportModal()" class="text-slate-400 hover:text-white p-1">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-
-            <!-- Screenshot Banner -->
-            <div class="bg-amber-500/15 border border-amber-500/40 p-3.5 rounded-2xl text-amber-300 text-xs font-bold flex items-center gap-3">
-                <div class="text-2xl shrink-0">📸</div>
-                <div>
-                    <span class="block text-amber-200 font-extrabold text-sm mb-0.5">تنبيه هام للطالب:</span>
-                    يرجى نسخ نص التقرير من الأسفل وإرساله للمعلم أو المدرب لتوثيق درجتك وإنجازك! 🚀
-                </div>
-            </div>
-
-            <div class="overflow-y-auto space-y-3 pr-1 flex-1 text-xs" id="trainer-report-content">
-                <!-- Dynamic Content injected via JavaScript -->
-            </div>
-
-            <div class="flex gap-2 shrink-0 pt-2 border-t border-slate-800">
-                <button onclick="copyTrainerData()" class="flex-1 py-3 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-copy"></i>
-                    <span>نسخ نص التقرير</span>
-                </button>
-                <button onclick="toggleTrainerReportModal()" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl border border-slate-700 transition">
-                    إغلاق
-                </button>
-            </div>
-        </div>
-    </div>
 
     <div id="toast-notification" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-900 border border-cyan-500/50 text-cyan-300 px-4 py-2.5 rounded-xl text-xs font-bold shadow-2xl hidden items-center gap-2 z-50">
         <i class="fa-solid fa-circle-info text-cyan-400"></i>
@@ -629,6 +600,7 @@
 
         let currentStep = 0;
         const totalSteps = 10;
+        let confettiAnimationId = null;
 
         function prevQuestion(current) {
             playSound('click');
@@ -719,6 +691,20 @@
 
         function nextQuestion(current) {
             playSound('click');
+
+            if (current === 9) {
+                const missing = [];
+                if (!studentData.selfRating.assembly) missing.push('تركيب الروبوت والمكونات');
+                if (!studentData.selfRating.coding) missing.push('البرمجة والحركة');
+                if (!studentData.selfRating.problem) missing.push('اكتشاف وحل المشكلات');
+
+                if (missing.length > 0) {
+                    playSound('wrong');
+                    showToast('⚠️ يرجى الإجابة عن جميع مهارات التقييم الذاتي أولًا: ' + missing.join('، '));
+                    return;
+                }
+            }
+
             if (current < totalSteps) {
                 currentStep = current + 1;
                 showStep(currentStep);
@@ -902,7 +888,7 @@
         let act3Steps = [
             { id: 1, text: 'تركيب الهيكل الأساسي وعقل الروبوت (HUB) والبطارية ⚙️🧠🔋', correctOrder: 1 },
             { id: 2, text: 'تركيب المحركات والحساسات ⚙️📡', correctOrder: 2 },
-            { id: 3, text: 'تركيب العجلات والأسلاك بين المحركات والحساسات وعقل الروبوت 🛞🔌', correctOrder: 3 },
+            { id: 3, text: 'توصيل الأسلاك بين الأجزاء 🛞🔌', correctOrder: 3 },
             { id: 4, text: 'البرمجة 💻', correctOrder: 4 }
         ];
 
@@ -1193,8 +1179,36 @@
         }
 
         function finishAssessment() {
+            // الاستبانة إلزامية بالكامل قبل التسليم.
+            const missing = [];
+            const requiredSkills = [
+                ['assembly', 'مهارة تركيب الروبوت والمكونات'],
+                ['coding', 'مهارة البرمجة والحركة'],
+                ['problem', 'مهارة اكتشاف وحل المشكلات']
+            ];
+
+            requiredSkills.forEach(([id, label]) => {
+                if (!studentData.selfRating[id]) missing.push(label);
+            });
+
+            if (!studentData.survey.enjoyed) {
+                missing.push('اختيار أكثر شيء استمتعت به');
+            }
+
+            const dreamInput = document.getElementById('act10-dream');
+            const dream = dreamInput ? dreamInput.value.trim() : '';
+            if (!dream) {
+                missing.push('كتابة الفكرة الإبداعية');
+            }
+
+            if (missing.length > 0) {
+                playSound('wrong');
+                showToast('⚠️ يرجى إكمال الاستبانة قبل تسليم التحدي. المتبقي: ' + missing.join('، '));
+                return;
+            }
+
             playSound('correct');
-            studentData.survey['dream'] = document.getElementById('act10-dream').value.trim();
+            studentData.survey['dream'] = dream;
 
             studentData.scores.station1 = (studentData.actScores.act1 || 0) + (studentData.actScores.act2 || 0);
             studentData.scores.station2 = (studentData.actScores.act3 || 0) + (studentData.actScores.act4 || 0);
@@ -1244,70 +1258,9 @@
             });
         }
 
-        function toggleTrainerReportModal() {
-            playSound('click');
-            const modal = document.getElementById('trainer-report-modal');
-            modal.classList.toggle('hidden');
-
-            if (!modal.classList.contains('hidden')) {
-                const content = document.getElementById('trainer-report-content');
-                const totalScore = (studentData.scores.station1 || 0) + (studentData.scores.station2 || 0) + (studentData.scores.station3 || 0) + (studentData.scores.station4 || 0);
-
-                content.innerHTML = `
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-2">
-                        <div class="flex justify-between items-center text-slate-200">
-                            <strong>اسم الطالب:</strong>
-                            <span class="text-cyan-400 font-bold text-sm">${studentData.name}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-200">
-                            <strong>جوال ولي الأمر:</strong>
-                            <span class="text-emerald-400 font-mono font-bold">${studentData.phone}</span>
-                        </div>
-                        <div class="flex justify-between items-center text-slate-200 border-t border-slate-800 pt-2">
-                            <strong>المجموع الكلي:</strong>
-                            <span class="text-amber-400 font-extrabold text-sm">${totalScore} / 8</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-1.5">
-                        <span class="text-cyan-300 font-bold block border-b border-slate-800 pb-1">📊 نتائج المحطات:</span>
-                        <div class="flex justify-between"><span>المحطة 1 (الأساسيات):</span><span class="font-bold text-slate-200">${studentData.scores.station1} / 2</span></div>
-                        <div class="flex justify-between"><span>المحطة 2 (التركيب):</span><span class="font-bold text-slate-200">${studentData.scores.station2} / 2</span></div>
-                        <div class="flex justify-between"><span>المحطة 3 (البرمجة):</span><span class="font-bold text-slate-200">${studentData.scores.station3} / 2</span></div>
-                        <div class="flex justify-between"><span>المحطة 4 (حل المشكلات):</span><span class="font-bold text-slate-200">${studentData.scores.station4} / 2</span></div>
-                    </div>
-
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-1.5">
-                        <span class="text-purple-300 font-bold block border-b border-slate-800 pb-1">🌟 التقييم الذاتي:</span>
-                        <div class="flex justify-between"><span>التركيب والمكونات:</span><span class="text-slate-300">${studentData.selfRating.assembly || 'لم يحدد'}</span></div>
-                        <div class="flex justify-between"><span>البرمجة والحركة:</span><span class="text-slate-300">${studentData.selfRating.coding || 'لم يحدد'}</span></div>
-                        <div class="flex justify-between"><span>حل المشكلات:</span><span class="text-slate-300">${studentData.selfRating.problem || 'لم يحدد'}</span></div>
-                    </div>
-
-                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-1.5">
-                        <span class="text-amber-300 font-bold block border-b border-slate-800 pb-1">💬 إجابات الاستبيان الكاملة:</span>
-                        <div><strong>أكثر شيء استمتع به:</strong> <span class="text-slate-300">${studentData.survey.enjoyed || 'لم يحدد'}</span></div>
-                        <div><strong>فكرته الإبداعية للروبوت القادم:</strong> <span class="text-cyan-300 font-bold block mt-1 bg-slate-950 p-2 rounded-xl border border-slate-800">${studentData.survey.dream || 'لا توجد فكرة مكتوبة'}</span></div>
-                    </div>
-                `;
-            }
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast-notification');
-            if (!toast) return;
-            document.getElementById('toast-text').innerText = message;
-            toast.classList.remove('hidden');
-            toast.classList.add('flex');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-                toast.classList.remove('flex');
-            }, 3000);
-        }
-
-        function copyTrainerData() {
+        async function copyTrainerData() {
             const totalScore = (studentData.scores.station1 || 0) + (studentData.scores.station2 || 0) + (studentData.scores.station3 || 0) + (studentData.scores.station4 || 0);
-            const textToCopy = "📋 تقرير تقييم ختام المستوى الأول في الروبوتكس:\n" +
+            const textToCopy = "🤖 التقييم الختامي لروبوتكس 1 | انطلاق:\n" +
                 "👤 اسم الطالب: " + studentData.name + "\n" +
                 "📱 الجوال: " + studentData.phone + "\n" +
                 "🏆 المجموع الكلي: " + totalScore + " / 8\n" +
@@ -1326,17 +1279,52 @@
                 "- أكثر شيء استمتع به: " + (studentData.survey.enjoyed || 'غير محدد') + "\n" +
                 "- الفكرة الإبداعية: " + (studentData.survey.dream || 'لا يوجد');
 
-            fallbackCopy(textToCopy);
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(textToCopy);
+                } else {
+                    fallbackCopy(textToCopy);
+                    return;
+                }
+                showToast('تم نسخ نص التقرير بنجاح! أرسله للمدرب الآن 📋');
+            } catch (error) {
+                fallbackCopy(textToCopy);
+            }
         }
 
         function fallbackCopy(textToCopy) {
             const ta = document.createElement('textarea');
             ta.value = textToCopy;
+            ta.style.position = 'fixed';
+            ta.style.top = '0';
+            ta.style.left = '-9999px';
             document.body.appendChild(ta);
+            ta.focus();
             ta.select();
-            document.execCommand('copy');
+            let copied = false;
+            try { copied = document.execCommand('copy'); } catch (e) {}
             document.body.removeChild(ta);
-            showToast('تم نسخ تقرير المدرب بنجاح! 📋');
+            if (copied) {
+                showToast('تم نسخ نص التقرير بنجاح! أرسله للمدرب الآن 📋');
+            } else {
+                showToast('تعذر النسخ تلقائيًا. اضغط مطولًا لنسخ التقرير ثم أرسله للمدرب.');
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            const toastText = document.getElementById('toast-text');
+            if (!toast || !toastText) return;
+
+            toastText.textContent = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 4500);
         }
 
         function playSound(type) {
@@ -1387,6 +1375,8 @@
                 });
             }
 
+            if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+
             function render() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 particles.forEach(p => {
@@ -1399,10 +1389,94 @@
                 });
 
                 if (particles.some(p => p.y < canvas.height)) {
-                    requestAnimationFrame(render);
+                    confettiAnimationId = requestAnimationFrame(render);
+                } else {
+                    confettiAnimationId = null;
                 }
             }
             render();
+        }
+
+        function resetChallenge() {
+            // إيقاف الاحتفالات وتنظيف حالتها حتى لا تستمر بعد إعادة التحدي.
+            if (confettiAnimationId) {
+                cancelAnimationFrame(confettiAnimationId);
+                confettiAnimationId = null;
+            }
+
+            const canvas = document.getElementById('confetti-canvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            if (window.toastTimer) clearTimeout(window.toastTimer);
+
+            // إعادة حالة التحدي بالكامل بدون الاعتماد على location.reload().
+            studentData = {
+                name: '',
+                phone: '',
+                answers: {},
+                actScores: {
+                    act1: 0, act2: 0, act3: 0, act4: 0,
+                    act5: 0, act6: 0, act7: 0, act8: 0
+                },
+                scores: {
+                    station1: 0, station2: 0, station3: 0, station4: 0
+                },
+                selfRating: {},
+                survey: {}
+            };
+
+            currentStep = 0;
+
+            // تنظيف مدخلات البداية والاستبانة.
+            ['student-name', 'parent-phone', 'act10-dream'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+
+            const enjoyed = document.getElementById('act10-enjoyed');
+            if (enjoyed) enjoyed.innerHTML = '';
+
+            const errorBox = document.getElementById('welcome-error');
+            if (errorBox) errorBox.classList.add('hidden');
+
+            const toast = document.getElementById('toast-notification');
+            if (toast) {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }
+
+            // العودة لشاشة البداية وإخفاء النتيجة والرأس.
+            document.querySelectorAll('main > section').forEach(section => section.classList.add('hidden'));
+            document.getElementById('step-0').classList.remove('hidden');
+            document.getElementById('app-header').classList.add('hidden');
+
+            // تصفير شريط التقدم.
+            document.getElementById('progress-text').innerText = '1 / 10';
+            document.getElementById('progress-circle').style.strokeDashoffset = 81.68;
+
+            // إعادة تهيئة الأنشطة عند الحاجة.
+            ['act1-grid','act2-parts','act3-steps-container','act4-options','act5-options','act6-code-blocks','act7-options','act8-options','act9-skills-container','act10-enjoyed']
+                .forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = '';
+                });
+
+            // إخفاء الأسئلة الفرعية التي تظهر بعد الإجابة، حتى يبدأ كل نشاط بسؤال واحد فقط.
+            ['act1-reason-box', 'act2-motor-question', 'act6-fix-picker']
+                .forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.classList.add('hidden');
+                        const innerOptions = el.querySelectorAll('[id$="-opts"], [id$="-options"], [id$="-replacement-opts"]');
+                        innerOptions.forEach(container => container.innerHTML = '');
+                    }
+                });
+
+            showToast('🔄 تم إعادة التحدي من البداية بنجاح!');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.onload = function() {
