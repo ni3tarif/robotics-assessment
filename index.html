@@ -690,7 +690,7 @@
         }
 
         function nextQuestion(current) {
-            playSound('click');
+            playSound('next');
 
             if (current === 9) {
                 const missing = [];
@@ -1207,7 +1207,7 @@
                 return;
             }
 
-            playSound('correct');
+            playSound('finish');
             studentData.survey['dream'] = dream;
 
             studentData.scores.station1 = (studentData.actScores.act1 || 0) + (studentData.actScores.act2 || 0);
@@ -1279,36 +1279,45 @@
                 "- أكثر شيء استمتع به: " + (studentData.survey.enjoyed || 'غير محدد') + "\n" +
                 "- الفكرة الإبداعية: " + (studentData.survey.dream || 'لا يوجد');
 
+            // لا ننتظر Clipboard API إلى ما لا نهاية؛ بعض المتصفحات قد تبقي الطلب معلقًا.
             try {
                 if (navigator.clipboard && window.isSecureContext) {
-                    await navigator.clipboard.writeText(textToCopy);
-                } else {
-                    fallbackCopy(textToCopy);
+                    const copyPromise = navigator.clipboard.writeText(textToCopy);
+                    const timeoutPromise = new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error('clipboard-timeout')), 1200)
+                    );
+                    await Promise.race([copyPromise, timeoutPromise]);
+                    showToast('تم نسخ نص التقرير بنجاح! أرسله للمدرب الآن 📋');
                     return;
                 }
-                showToast('تم نسخ نص التقرير بنجاح! أرسله للمدرب الآن 📋');
             } catch (error) {
-                fallbackCopy(textToCopy);
+                // ننتقل مباشرة للطريقة الاحتياطية بدون تعطيل الصفحة.
+            }
+
+            const copied = fallbackCopy(textToCopy);
+            if (copied) {
+                showToast('تم نسخ نص التقرير بنجاح! أرسله للمدرب الآن 📋');
+            } else {
+                showToast('تعذر النسخ تلقائيًا. اضغط مطولًا على النص لنسخه.');
             }
         }
 
         function fallbackCopy(textToCopy) {
             const ta = document.createElement('textarea');
             ta.value = textToCopy;
+            ta.setAttribute('readonly', '');
             ta.style.position = 'fixed';
             ta.style.top = '0';
             ta.style.left = '-9999px';
+            ta.style.opacity = '0';
             document.body.appendChild(ta);
             ta.focus();
             ta.select();
+            ta.setSelectionRange(0, ta.value.length);
             let copied = false;
-            try { copied = document.execCommand('copy'); } catch (e) {}
+            try { copied = document.execCommand('copy'); } catch (e) { copied = false; }
             document.body.removeChild(ta);
-            if (copied) {
-                showToast('تم نسخ نص التقرير بنجاح! أرسله للمدرب الآن 📋');
-            } else {
-                showToast('تعذر النسخ تلقائيًا. اضغط مطولًا لنسخ التقرير ثم أرسله للمدرب.');
-            }
+            return copied;
         }
 
         function showToast(message) {
@@ -1327,32 +1336,73 @@
             }, 4500);
         }
 
+        // نظام صوتي واحد مستمر طوال التحدي، لتجنب مشكلة إنشاء AudioContext جديد لكل نقرة.
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) return null;
+                audioCtx = new AudioContextClass();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume().catch(() => {});
+            }
+            return audioCtx;
+        }
+
+        // بعض المتصفحات تعلق الصوت إذا لم يُستأنف السياق بعد تفاعل المستخدم.
+        document.addEventListener('click', () => {
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume().catch(() => {});
+            }
+        }, { passive: true });
+
+        function playTone(ctx, frequency, start, duration, volume, type = 'sine') {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(frequency, start);
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
+            gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(start);
+            osc.stop(start + duration + 0.02);
+        }
+
         function playSound(type) {
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const now = ctx.currentTime + 0.01;
 
                 if (type === 'click') {
-                    osc.frequency.value = 400;
-                    gain.gain.setValueAtTime(0.05, ctx.currentTime);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.05);
+                    // نغمة محايدة عند اختيار الإجابة أو الضغط على زر.
+                    playTone(ctx, 440, now, 0.07, 0.045, 'sine');
+                } else if (type === 'next') {
+                    // نغمة إنجاز قصيرة عند الانتقال للسؤال التالي.
+                    playTone(ctx, 523.25, now, 0.09, 0.055, 'sine');
+                    playTone(ctx, 659.25, now + 0.10, 0.11, 0.06, 'sine');
+                    playTone(ctx, 783.99, now + 0.22, 0.14, 0.065, 'sine');
+                } else if (type === 'finish') {
+                    // نغمة ختامية احتفالية عند إنهاء التحدي.
+                    playTone(ctx, 523.25, now, 0.10, 0.06, 'sine');
+                    playTone(ctx, 659.25, now + 0.10, 0.10, 0.065, 'sine');
+                    playTone(ctx, 783.99, now + 0.20, 0.10, 0.07, 'sine');
+                    playTone(ctx, 1046.50, now + 0.32, 0.22, 0.075, 'sine');
                 } else if (type === 'correct') {
-                    osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.25);
+                    // تستخدم فقط للتأكيد العام (مثل بدء التحدي).
+                    playTone(ctx, 523.25, now, 0.10, 0.055, 'sine');
+                    playTone(ctx, 659.25, now + 0.11, 0.13, 0.06, 'sine');
                 } else if (type === 'wrong') {
-                    osc.frequency.setValueAtTime(200, ctx.currentTime);
-                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.15);
+                    // تنبيه محايد عند وجود بيانات ناقصة أو غير صحيحة.
+                    playTone(ctx, 220, now, 0.14, 0.055, 'sine');
                 }
-            } catch(e) {}
+            } catch (e) {
+                // لا نسمح للصوت بإيقاف عمل التحدي إذا منع المتصفح تشغيله.
+            }
         }
 
         function triggerConfetti() {
